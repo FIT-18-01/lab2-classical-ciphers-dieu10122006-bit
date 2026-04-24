@@ -23,7 +23,7 @@ string rail_fence_encrypt(const string &plaintext, int rails) {
     int direction = 1;
 
     for (char c : plaintext) {
-        // TODO(student): Q6 can keep spaces as normal characters.
+        // Q6: Keep spaces as normal characters in the zigzag pattern
         fence[rail] += c;
         rail += direction;
         if (rail == rails - 1 || rail == 0) direction = -direction;
@@ -35,8 +35,42 @@ string rail_fence_encrypt(const string &plaintext, int rails) {
 }
 
 string rail_fence_decrypt(const string &ciphertext, int rails) {
-    // TODO(student): Q5
-    return ciphertext;
+    // Q5: Implement Rail Fence decryption
+    if (rails <= 1 || ciphertext.empty()) return ciphertext;
+
+    int len = ciphertext.length();
+    vector<int> rail_lengths(rails, 0);
+    int rail = 0;
+    int direction = 1;
+
+    // Calculate the length of each rail
+    for (int i = 0; i < len; i++) {
+        rail_lengths[rail]++;
+        rail += direction;
+        if (rail == rails - 1 || rail == 0) direction = -direction;
+    }
+
+    // Split ciphertext into rails
+    vector<string> fence(rails);
+    int pos = 0;
+    for (int i = 0; i < rails; i++) {
+        fence[i] = ciphertext.substr(pos, rail_lengths[i]);
+        pos += rail_lengths[i];
+    }
+
+    // Reconstruct plaintext following zigzag pattern
+    string plaintext;
+    vector<int> indices(rails, 0);
+    rail = 0;
+    direction = 1;
+
+    for (int i = 0; i < len; i++) {
+        plaintext += fence[rail][indices[rail]++];
+        rail += direction;
+        if (rail == rails - 1 || rail == 0) direction = -direction;
+    }
+
+    return plaintext;
 }
 
 string read_message_from_file(const string &path) {
@@ -58,6 +92,7 @@ int main() {
     int rails;
 
     if (choice == 3) {
+        // Q8: Read message from file
         message = read_message_from_file("data/input.txt");
         cout << "Message from file: " << message << "\n";
     } else {
@@ -67,7 +102,9 @@ int main() {
 
     cout << "Enter rails: ";
     cin >> rails;
+    // Q4: Try changing rails to 4 and observe the different ciphertext
 
+    // Q7: Validate input - only allow letters and spaces
     if (!is_valid_message(message)) {
         cout << "Invalid input. Only letters and spaces are allowed.\n";
         return 0;

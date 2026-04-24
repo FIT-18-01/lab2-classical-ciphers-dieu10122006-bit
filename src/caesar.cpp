@@ -25,14 +25,15 @@ char shift_char(char c, int shift) {
 string caesar_encrypt(const string &plaintext, int shift) {
     string ciphertext;
     for (char c : plaintext) {
-        // TODO(student): Q1 + Q2
+        // Q1: Support lowercase letters via shift_char function
+        // Q2: Keep spaces as-is (shift_char returns c if not alpha)
         ciphertext += shift_char(c, shift);
     }
     return ciphertext;
 }
 
 string caesar_decrypt(const string &ciphertext, int shift) {
-    // TODO(student): Q3
+    // Q3: Decrypt by using negative shift
     return caesar_encrypt(ciphertext, -shift);
 }
 
